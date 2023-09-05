@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import LoginForm from './components/LoginForm';
+import Home from './components/Home';
 
 function App() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentPage, setCurrentPage] = useState('login');
+
+  const handleLogin = (isAdmin) => {
+    setIsAdmin(isAdmin);
+    setIsLoggedIn(true);
+    setCurrentPage('home');
+  };
+
+  const handleLogout = () => {
+    setIsAdmin(false);
+    setIsLoggedIn(false);
+    setCurrentPage('login');
+  };
+
+  const handleNavigate = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {isLoggedIn && currentPage === 'home' && (
+        <Home isAdmin={isAdmin} onLogout={handleLogout} onNavigate={handleNavigate} />
+      )}
+      {(!isLoggedIn || currentPage === 'login') && (
+        <LoginForm onLogin={handleLogin} />
+      )}
     </div>
   );
 }
